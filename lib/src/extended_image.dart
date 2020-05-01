@@ -37,6 +37,7 @@ class ExtendedImage extends StatefulWidget {
     this.gaplessPlayback = false,
     this.filterQuality = FilterQuality.low,
     this.loadStateChanged,
+    this.loadStateChangedCallback,
     this.border,
     this.shape,
     this.borderRadius,
@@ -81,6 +82,7 @@ class ExtendedImage extends StatefulWidget {
     this.gaplessPlayback = false,
     this.filterQuality = FilterQuality.low,
     this.loadStateChanged,
+    this.loadStateChangedCallback,
     this.shape,
     this.border,
     this.borderRadius,
@@ -162,6 +164,7 @@ class ExtendedImage extends StatefulWidget {
     this.gaplessPlayback = false,
     this.filterQuality = FilterQuality.low,
     this.loadStateChanged,
+    this.loadStateChangedCallback,
     this.shape,
     this.border,
     this.borderRadius,
@@ -337,6 +340,7 @@ class ExtendedImage extends StatefulWidget {
     String package,
     this.filterQuality = FilterQuality.low,
     this.loadStateChanged,
+    this.loadStateChangedCallback,
     this.shape,
     this.border,
     this.borderRadius,
@@ -403,6 +407,7 @@ class ExtendedImage extends StatefulWidget {
     this.gaplessPlayback = false,
     this.filterQuality = FilterQuality.low,
     this.loadStateChanged,
+    this.loadStateChangedCallback,
     this.shape,
     this.border,
     this.borderRadius,
@@ -519,6 +524,9 @@ class ExtendedImage extends StatefulWidget {
 
   /// custom load state widget if you want
   final LoadStateChanged loadStateChanged;
+
+  /// callback after build completed
+  final Function loadStateChangedCallback;
 
   /// The image to display.
   final ImageProvider image;
@@ -882,6 +890,12 @@ class _ExtendedImageState extends State<ExtendedImage>
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.loadStateChangedCallback != null) {
+        widget.loadStateChangedCallback(this);
+      }
+    });
+
     Widget current;
     returnLoadStateChangedWidget = false;
     if (widget.loadStateChanged != null) {
